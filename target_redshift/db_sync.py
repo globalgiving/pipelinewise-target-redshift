@@ -386,7 +386,14 @@ class DbSync:
 
         self.logger.info("Target S3 bucket: {}, local file: {}, S3 key: {}".format(bucket, file, s3_key))
 
-        extra_args = {'ACL': s3_acl} if s3_acl else None
+        # OLD VERSION
+        # extra_args = {'ACL': s3_acl} if s3_acl else None
+
+        # GG VERSION - Force AES256 Encryption
+        extra_args = {'ServerSideEncryption':'AES256'}
+        if s3_acl:
+            extra_args['ACL'] = s3_acl
+            
         self.s3.upload_file(file, bucket, s3_key, ExtraArgs=extra_args)
 
         return s3_key
